@@ -1,0 +1,28 @@
+{
+  "name": "beacon-3d-map",
+  "version": "1.0.0",
+  "description": "Interactive 3D US Map with Three.js showing service locations",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.160.0",
+    "@tweenjs/tween.js": "^20.0.3"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "keywords": [
+    "three.js",
+    "3d",
+    "map",
+    "visualization",
+    "interactive"
+  ],
+  "author": "",
+  "license": "MIT"
+}
