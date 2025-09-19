@@ -1,21 +1,17 @@
-import * as TWEEN from '@tweenjs/tween.js';
-import { Scene } from './components/Scene.js';
-import { MapRenderer } from './components/MapRenderer.js';
-import { CityMarkers } from './components/CityMarkers.js';
-import { InteractionHandler } from './components/InteractionHandler.js';
+import { SVGMapRenderer } from './components/SVGMapRenderer.js';
+import { SVGCityMarkers } from './components/SVGCityMarkers.js';
+import { SVGInteractionHandler } from './components/SVGInteractionHandler.js';
 import { Navigation } from './components/Navigation.js';
 import { DataLoader } from './data/DataLoader.js';
 import { LoadingIndicator } from './components/LoadingIndicator.js';
 
 export class App {
   constructor() {
-    this.scene = null;
     this.mapRenderer = null;
     this.cityMarkers = null;
     this.interactionHandler = null;
     this.navigation = null;
     this.loadingIndicator = null;
-    this.animationId = null;
   }
 
   async init() {
@@ -33,34 +29,26 @@ export class App {
     this.loadingIndicator.show(container);
 
     try {
-      // Initialize components
-      this.scene = new Scene();
-      this.scene.init(container);
+      // Initialize SVG-based components
+      this.mapRenderer = new SVGMapRenderer();
+      await this.mapRenderer.init(container);
 
-      this.mapRenderer = new MapRenderer();
-      this.cityMarkers = new CityMarkers();
-      this.interactionHandler = new InteractionHandler(this.scene, this.mapRenderer, this.cityMarkers);
+      this.cityMarkers = new SVGCityMarkers();
+      this.cityMarkers.init(this.mapRenderer.svg);
 
-      // Add city markers group to scene
-      this.scene.add(this.cityMarkers.getGroup());
+      this.interactionHandler = new SVGInteractionHandler(this.mapRenderer, this.cityMarkers);
 
       // Load data and render map
       const { states, cities } = await DataLoader.loadMapData();
-      
-      const mapGroup = this.mapRenderer.renderStates(states);
-      this.scene.add(mapGroup);
 
+      this.mapRenderer.renderStates(states);
       this.interactionHandler.setCities(cities);
-      this.interactionHandler.init(this.scene.renderer);
 
       // Setup event listeners
       window.addEventListener('resize', this.onWindowResize.bind(this), false);
 
       // Hide loading indicator
       this.loadingIndicator.hide();
-
-      // Start animation loop
-      this.animate();
 
     } catch (error) {
       console.error('Failed to initialize app:', error);
@@ -69,19 +57,12 @@ export class App {
   }
 
   onWindowResize() {
-    this.scene.onWindowResize();
-  }
-
-  animate() {
-    this.animationId = requestAnimationFrame(this.animate.bind(this));
-    TWEEN.update();
-    this.scene.render();
+    if (this.mapRenderer) {
+      this.mapRenderer.onResize();
+    }
   }
 
   destroy() {
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
-    }
     window.removeEventListener('resize', this.onWindowResize);
   }
 }
