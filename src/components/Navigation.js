@@ -9,7 +9,7 @@ export class Navigation {
     this.navigationElement.id = 'navigation';
     this.navigationElement.innerHTML = `
       <div class="nav-container">
-        <div class="nav-brand">beacon</div>
+        <div class="nav-brand"><span class="nav-brackets">&lt;</span> beacon <span class="nav-brackets">&gt;</span></div>
         <div class="nav-tabs">
           <button class="nav-tab active" data-tab="map">map</button>
           <button class="nav-tab" data-tab="database">database</button>

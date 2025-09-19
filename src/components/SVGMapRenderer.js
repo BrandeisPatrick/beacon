@@ -314,7 +314,7 @@ export class SVGMapRenderer {
     const pathElement = state.element.querySelector('.state-path');
     pathElement.setAttribute('fill', '#4a4a55');
     pathElement.setAttribute('stroke', '#6a6a75');
-    pathElement.setAttribute('stroke-width', '1.2');
+    pathElement.setAttribute('stroke-width', '0.5');
     pathElement.setAttribute('filter', 'url(#subtle-glow)');
     pathElement.style.transition = 'all 0.3s ease';
   }
