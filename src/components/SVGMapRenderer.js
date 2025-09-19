@@ -9,6 +9,27 @@ export class SVGMapRenderer {
     this.mapGroup = null;
     this.onStateClick = null;
     this.onStateHover = null;
+
+    // State name to abbreviation mapping
+    this.stateAbbreviations = {
+      'Alabama': 'AL', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA', 'Colorado': 'CO',
+      'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA', 'Idaho': 'ID',
+      'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA', 'Kansas': 'KS', 'Kentucky': 'KY',
+      'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD', 'Massachusetts': 'MA', 'Michigan': 'MI',
+      'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO', 'Montana': 'MT', 'Nebraska': 'NE',
+      'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY',
+      'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH', 'Oklahoma': 'OK', 'Oregon': 'OR',
+      'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD',
+      'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT', 'Virginia': 'VA',
+      'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY'
+    };
+
+    // Manual position adjustments for problematic states
+    this.labelAdjustments = {
+      'Louisiana': { x: -5, y: -4 },  // Move LA left and up slightly
+      'Florida': { x: 5, y: 0 },      // Move FL right and center vertically
+      'Idaho': { x: 0, y: 3 }         // Move ID down a little
+    };
   }
 
   async init(container) {
@@ -139,6 +160,28 @@ export class SVGMapRenderer {
     });
 
     group.appendChild(pathElement);
+
+    // Add state abbreviation text
+    const abbreviation = this.stateAbbreviations[feature.properties.name];
+    if (abbreviation) {
+      const centroid = this.calculateCentroid(feature.geometry);
+      const adjustment = this.labelAdjustments[feature.properties.name] || { x: 0, y: 0 };
+
+      const textElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      textElement.setAttribute('x', centroid.x + adjustment.x);
+      textElement.setAttribute('y', centroid.y + adjustment.y);
+      textElement.setAttribute('class', 'state-abbreviation');
+      textElement.setAttribute('text-anchor', 'middle');
+      textElement.setAttribute('dominant-baseline', 'central');
+      textElement.setAttribute('font-family', 'Arial, sans-serif');
+      textElement.setAttribute('font-size', '2');
+      textElement.setAttribute('font-weight', '200');
+      textElement.setAttribute('fill', '#a8a8ab');
+      textElement.setAttribute('pointer-events', 'none');
+      textElement.textContent = abbreviation;
+      group.appendChild(textElement);
+    }
+
     return group;
   }
 
@@ -183,6 +226,40 @@ export class SVGMapRenderer {
     }
 
     return pathData;
+  }
+
+  calculateCentroid(geometry) {
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+
+    const processCoordinates = (coordinates) => {
+      coordinates.forEach(coord => {
+        const x = (coord[0] + 180) * (1000 / 360);
+        const y = (90 - coord[1]) * (600 / 180);
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
+      });
+    };
+
+    if (geometry.type === 'Polygon') {
+      geometry.coordinates.forEach(ring => {
+        processCoordinates(ring);
+      });
+    } else if (geometry.type === 'MultiPolygon') {
+      geometry.coordinates.forEach(polygon => {
+        polygon.forEach(ring => {
+          processCoordinates(ring);
+        });
+      });
+    }
+
+    // Return the bounding box center (accurate for irregular shapes)
+    return {
+      x: (minX + maxX) / 2,
+      y: (minY + maxY) / 2
+    };
   }
 
   centerMap() {
