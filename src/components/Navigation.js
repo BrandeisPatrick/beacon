@@ -2,6 +2,7 @@ export class Navigation {
   constructor() {
     this.currentTab = 'map';
     this.navigationElement = null;
+    this.onTabChange = null;
   }
 
   init(container) {
@@ -13,6 +14,7 @@ export class Navigation {
         <div class="nav-tabs">
           <button class="nav-tab active" data-tab="map">map</button>
           <button class="nav-tab" data-tab="database">database</button>
+          <button class="nav-tab" data-tab="batch-logs">batch logs</button>
           <button class="nav-tab" data-tab="contact">contact</button>
         </div>
       </div>
@@ -49,11 +51,17 @@ export class Navigation {
 
     this.currentTab = tabName;
 
-    // For now, just console log - later we can add actual tab functionality
-    console.log(`Switched to tab: ${tabName}`);
+    // Emit tab change event
+    if (this.onTabChange) {
+      this.onTabChange(tabName);
+    }
   }
 
   getCurrentTab() {
     return this.currentTab;
+  }
+
+  setTabChangeHandler(handler) {
+    this.onTabChange = handler;
   }
 }

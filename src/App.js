@@ -2,6 +2,8 @@ import { SVGMapRenderer } from './components/SVGMapRenderer.js';
 import { SVGCityMarkers } from './components/SVGCityMarkers.js';
 import { SVGInteractionHandler } from './components/SVGInteractionHandler.js';
 import { Navigation } from './components/Navigation.js';
+import { DatabaseTable } from './components/DatabaseTable.js';
+import { BatchLogs } from './components/BatchLogs.js';
 import { DataLoader } from './data/DataLoader.js';
 import { LoadingIndicator } from './components/LoadingIndicator.js';
 
@@ -11,7 +13,11 @@ export class App {
     this.cityMarkers = null;
     this.interactionHandler = null;
     this.navigation = null;
+    this.databaseTable = null;
+    this.batchLogs = null;
     this.loadingIndicator = null;
+    this.mapContainer = null;
+    this.currentTab = 'map';
   }
 
   async init() {
@@ -21,9 +27,21 @@ export class App {
       throw new Error('Required elements not found');
     }
 
+    // Store reference to main container
+    this.mapContainer = container;
+
     // Initialize navigation first
     this.navigation = new Navigation();
     this.navigation.init(app);
+    this.navigation.setTabChangeHandler(this.handleTabChange.bind(this));
+
+    // Initialize database table
+    this.databaseTable = new DatabaseTable();
+    this.databaseTable.init(container);
+
+    // Initialize batch logs
+    this.batchLogs = new BatchLogs();
+    this.batchLogs.init(container);
 
     this.loadingIndicator = new LoadingIndicator();
     this.loadingIndicator.show(container);
@@ -44,8 +62,15 @@ export class App {
       this.mapRenderer.renderStates(states);
       this.interactionHandler.setCities(cities);
 
+      // Load coffee shop data for database table
+      const coffeeShopData = await DataLoader.loadBusinessData('atlanta');
+      this.databaseTable.setData(coffeeShopData);
+
       // Setup event listeners
       window.addEventListener('resize', this.onWindowResize.bind(this), false);
+
+      // Show initial tab (map by default)
+      this.showTab(this.currentTab);
 
       // Hide loading indicator
       this.loadingIndicator.hide();
@@ -53,6 +78,49 @@ export class App {
     } catch (error) {
       console.error('Failed to initialize app:', error);
       this.loadingIndicator.showError('Failed to load map data. Please try refreshing the page.');
+    }
+  }
+
+  handleTabChange(tabName) {
+    this.currentTab = tabName;
+    this.showTab(tabName);
+  }
+
+  showTab(tabName) {
+    // Hide all content first
+    if (this.mapRenderer && this.mapRenderer.svg) {
+      this.mapRenderer.svg.style.display = 'none';
+    }
+    if (this.databaseTable) {
+      this.databaseTable.hide();
+    }
+    if (this.batchLogs) {
+      this.batchLogs.hide();
+    }
+
+    // Show the selected tab content
+    switch (tabName) {
+      case 'map':
+        if (this.mapRenderer && this.mapRenderer.svg) {
+          this.mapRenderer.svg.style.display = 'block';
+        }
+        break;
+      case 'database':
+        if (this.databaseTable) {
+          this.databaseTable.show();
+        }
+        break;
+      case 'batch-logs':
+        if (this.batchLogs) {
+          this.batchLogs.show();
+        }
+        break;
+      case 'contact':
+        // TODO: Implement contact tab
+        console.log('Contact tab not implemented yet');
+        break;
+      default:
+        console.warn(`Unknown tab: ${tabName}`);
     }
   }
 
@@ -64,5 +132,11 @@ export class App {
 
   destroy() {
     window.removeEventListener('resize', this.onWindowResize);
+    if (this.databaseTable) {
+      this.databaseTable.destroy();
+    }
+    if (this.batchLogs) {
+      this.batchLogs.destroy();
+    }
   }
 }
