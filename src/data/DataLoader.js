@@ -31,7 +31,7 @@ export class DataLoader {
 
   static async loadCoffeeShopData() {
     try {
-      const response = await fetch('/src/data/coffeeShops.json');
+      const response = await fetch('/data/coffeeShops.json');
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

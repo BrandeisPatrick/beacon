@@ -1,0 +1,124 @@
+{
+  "atlanta": [
+    {
+      "type": "Coffee Shop",
+      "name": "Starbucks Reserve",
+      "location": "999 Peachtree St NE",
+      "zipCode": "30309",
+      "ratings": {
+        "decoration": 3,
+        "coffee": 2,
+        "studySuitable": 2
+      },
+      "parking": "paid"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "Octane Coffee",
+      "location": "1009 Marietta St NW",
+      "zipCode": "30318",
+      "ratings": {
+        "decoration": 3,
+        "coffee": 3,
+        "studySuitable": 3
+      },
+      "parking": "free"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "Joe Coffee",
+      "location": "510 Piedmont Ave NE",
+      "zipCode": "30308",
+      "ratings": {
+        "decoration": 2,
+        "coffee": 3,
+        "studySuitable": 2
+      },
+      "parking": "none"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "Dancing Goats Coffee Bar",
+      "location": "394 Moreland Ave NE",
+      "zipCode": "30307",
+      "ratings": {
+        "decoration": 2,
+        "coffee": 2,
+        "studySuitable": 1
+      },
+      "parking": "free"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "Revelator Coffee Company",
+      "location": "1144 Crescent Ave NE",
+      "zipCode": "30309",
+      "ratings": {
+        "decoration": 3,
+        "coffee": 3,
+        "studySuitable": 3
+      },
+      "parking": "paid"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "Chrome Yellow Trading Co.",
+      "location": "1185 Euclid Ave NE",
+      "zipCode": "30307",
+      "ratings": {
+        "decoration": 3,
+        "coffee": 2,
+        "studySuitable": 2
+      },
+      "parking": "free"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "Muchacho",
+      "location": "603 North Highland Ave NE",
+      "zipCode": "30307",
+      "ratings": {
+        "decoration": 2,
+        "coffee": 3,
+        "studySuitable": 1
+      },
+      "parking": "free"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "East Pole Coffee Co.",
+      "location": "485 Flat Shoals Ave SE",
+      "zipCode": "30316",
+      "ratings": {
+        "decoration": 2,
+        "coffee": 2,
+        "studySuitable": 2
+      },
+      "parking": "free"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "Land of a Thousand Hills Coffee",
+      "location": "1000 Marietta St NW",
+      "zipCode": "30318",
+      "ratings": {
+        "decoration": 1,
+        "coffee": 2,
+        "studySuitable": 3
+      },
+      "parking": "paid"
+    },
+    {
+      "type": "Coffee Shop",
+      "name": "Condesa Coffee",
+      "location": "1034 Edgewood Ave NE",
+      "zipCode": "30307",
+      "ratings": {
+        "decoration": 2,
+        "coffee": 3,
+        "studySuitable": 2
+      },
+      "parking": "none"
+    }
+  ]
+}
