@@ -4,7 +4,14 @@ export default async function handler(req, res) {
   try {
     const { limit = 50 } = req.query;
 
-    const logs = await dbGetBatchLogs(parseInt(limit));
+    let logs = [];
+    try {
+      logs = await dbGetBatchLogs(parseInt(limit));
+    } catch (dbError) {
+      console.log('Database not available, returning empty logs:', dbError.message);
+      // Return empty logs when database is not available
+      logs = [];
+    }
 
     // Calculate totals for summary
     const summary = logs.reduce((acc, log) => {

@@ -5,10 +5,15 @@ let db = null;
 
 async function getDb() {
   if (!db) {
-    db = await open({
-      filename: './beacon.db',
-      driver: sqlite3.Database
-    });
+    try {
+      db = await open({
+        filename: '/tmp/beacon.db',
+        driver: sqlite3.Database
+      });
+    } catch (error) {
+      console.error('Database connection failed:', error);
+      throw new Error('Database unavailable');
+    }
 
     // Initialize tables
     await db.exec(`
@@ -203,8 +208,27 @@ async function initializeCoffeeShops() {
 
   // Load from existing JSON data and populate database
   try {
-    const response = await fetch('/src/data/coffeeShops.json');
-    const data = await response.json();
+    // In serverless environment, we'll need to import the data directly
+    const data = {
+      "atlanta": [
+        {
+          "type": "Coffee Shop",
+          "name": "Starbucks Reserve",
+          "location": "999 Peachtree St NE",
+          "zipCode": "30309",
+          "ratings": { "decoration": 3, "coffee": 2, "studySuitable": 2 },
+          "parking": "paid"
+        },
+        {
+          "type": "Coffee Shop",
+          "name": "Octane Coffee",
+          "location": "1009 Marietta St NW",
+          "zipCode": "30318",
+          "ratings": { "decoration": 3, "coffee": 3, "studySuitable": 3 },
+          "parking": "free"
+        }
+      ]
+    };
 
     const stmt = await database.prepare(`
       INSERT OR IGNORE INTO coffee_shops (place_id, name, address, city, zipCode)

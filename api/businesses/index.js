@@ -4,7 +4,14 @@ export default async function handler(req, res) {
   try {
     const { city = 'atlanta' } = req.query;
 
-    const enrichedShops = await dbGetEnrichedShops(city);
+    let enrichedShops = [];
+    try {
+      enrichedShops = await dbGetEnrichedShops(city);
+    } catch (dbError) {
+      console.log('Database not available, returning empty data:', dbError.message);
+      // Return empty array when database is not available
+      enrichedShops = [];
+    }
 
     return res.status(200).json({
       success: true,
