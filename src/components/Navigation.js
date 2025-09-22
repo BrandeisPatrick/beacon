@@ -14,7 +14,7 @@ export class Navigation {
         <div class="nav-tabs">
           <button class="nav-tab active" data-tab="map">map</button>
           <button class="nav-tab" data-tab="database">database</button>
-          <button class="nav-tab" data-tab="batch-logs">batch logs</button>
+          <button class="nav-tab" data-tab="batch-logs">radar</button>
           <button class="nav-tab" data-tab="contact">contact</button>
         </div>
       </div>

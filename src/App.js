@@ -3,7 +3,7 @@ import { SVGCityMarkers } from './components/SVGCityMarkers.js';
 import { SVGInteractionHandler } from './components/SVGInteractionHandler.js';
 import { Navigation } from './components/Navigation.js';
 import { DatabaseTable } from './components/DatabaseTable.js';
-import { BatchLogs } from './components/BatchLogs.js';
+import { RadarLogs } from './components/RadarLogs.js';
 import { DataLoader } from './data/DataLoader.js';
 import { LoadingIndicator } from './components/LoadingIndicator.js';
 
@@ -14,7 +14,7 @@ export class App {
     this.interactionHandler = null;
     this.navigation = null;
     this.databaseTable = null;
-    this.batchLogs = null;
+    this.radarLogs = null;
     this.loadingIndicator = null;
     this.mapContainer = null;
     this.currentTab = 'map';
@@ -39,9 +39,9 @@ export class App {
     this.databaseTable = new DatabaseTable();
     this.databaseTable.init(container);
 
-    // Initialize batch logs
-    this.batchLogs = new BatchLogs();
-    this.batchLogs.init(container);
+    // Initialize radar logs
+    this.radarLogs = new RadarLogs();
+    this.radarLogs.init(container);
 
     this.loadingIndicator = new LoadingIndicator();
     this.loadingIndicator.show(container);
@@ -94,8 +94,8 @@ export class App {
     if (this.databaseTable) {
       this.databaseTable.hide();
     }
-    if (this.batchLogs) {
-      this.batchLogs.hide();
+    if (this.radarLogs) {
+      this.radarLogs.hide();
     }
 
     // Show the selected tab content
@@ -111,8 +111,8 @@ export class App {
         }
         break;
       case 'batch-logs':
-        if (this.batchLogs) {
-          this.batchLogs.show();
+        if (this.radarLogs) {
+          this.radarLogs.show();
         }
         break;
       case 'contact':
@@ -135,8 +135,8 @@ export class App {
     if (this.databaseTable) {
       this.databaseTable.destroy();
     }
-    if (this.batchLogs) {
-      this.batchLogs.destroy();
+    if (this.radarLogs) {
+      this.radarLogs.destroy();
     }
   }
 }
